@@ -6,8 +6,12 @@ class BooksController < ApplicationController
   def create
     @post_image = Book.new(post_image_params)
     @post_image.user_id = current_user.id
-    @post_image.save
-    redirect_to post_images_path
+    if @post_image.save
+      flash[:notice] = "Book was successfully created."
+      redirect_to books_path
+    else
+    render :new
+    end
   end
 
   def index
@@ -29,6 +33,6 @@ class BooksController < ApplicationController
    private
 
   def post_image_params
-    params.require(:post_image).permit(:shop_name, :image, :caption)
+    params.require(:book).permit(:shop_name, :image, :caption)
   end
 end
