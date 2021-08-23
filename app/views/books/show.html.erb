@@ -21,20 +21,22 @@
 </tbody></table>
 
 <div class="row">
-  <a class="btn btn-outline-secondary btn-block fas fa-user-cog edit_user_15249" href="/users/15249/edit"></a>
+  <%= link_to '', edit_user_path(@users), class:"btn btn-outline-secondary btn-block fas fa-user-cog" %>
+
 </div>
+      <%= form_with model: @books, local:true do |f| %>
       <h2 class="mt-3">New book</h2>
-      <form action="/books" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="cq6XUKH6T1UjWTh7D4d5gCtKSp93UV2+BhAP4s+atwA72y6cgppeq55kT+U1R1izO/cZEJi5TU5yG7mzi5PYBg==">
   <div class="form-group">
     <label for="book_title">Title</label>
-    <input class="form-control book_title" type="text" name="book[title]" id="book_title">
+      <%= f.text_field :title %>
   </div>
   <div class="form-group">
     <label for="book_opinion">Opinion</label>
-    <textarea class="form-control book_body" name="book[body]" id="book_body"></textarea>
+    <%= f.text_area :body %>
   </div>
   <div class="form-group">
-    <input type="submit" name="commit" value="Create Book" class="btn btn-success" data-disable-with="Create Book">
+    <%= f.submit 'Create Book' %>
+    <% end %>
   </div>
 </form>
     </div>
@@ -43,17 +45,21 @@
   		<table class="table">
   		  <tbody><tr>
           <td>
-            <%= link_to user_path(@user) do %>
-             <img class="attachment user profile_image fallback" src="no_image.jpg"><br>
+            <%= link_to user_path(@users) do %>
+            <%= attachment_image_tag @book.user, :profile_image, :fill, 40, 40, fallback: "no_image.jpg" %>
+              <%= @book.user.name %>
             <% end %>
-            名前だよ
-<br>
-
+           </td>
+          <td>
+            <%= link_to book_path(@book.id) do %>
+               <%= @book.title %>
+               <% end %>
           </td>
-          <td><a href="/books/12537">as</a></td>
-          <td>as</td>
-            <td><a class="btn btn-sm btn-success edit_book_12537" href="/books/12537/edit">Edit</a></td>
-            <td><a data-confirm="本当に消しますか？" class="btn btn-sm btn-danger destroy_book_12537" rel="nofollow" data-method="delete" href="/books/12537">Destroy</a></td>
+          <td><%= @book.body %></td>
+          <% if @book.user_id == current_user.id %>
+            <td><%= link_to 'Edit', edit_book_path(@book.id), class:"btn btn-sm btn-success edit_book" %></td>
+            <td><%= link_to "Destroy", book_path(@book.id), class:"btn btn-sm btn-danger destroy_book_12788",  method: :delete,"data-confirm" => "Are you sure?" %></td>
+            <% end %>
         </tr>
       </tbody></table>
     </div>
@@ -61,13 +67,3 @@
 </main>
 </body>
 
-<div class="post-body">
-  <%= attachment_image_tag @book, :image %>
-  <p>ショップ名：<%= @book.shop_name %></p>
-  <p>説明：<%= @book.caption %></p>
-  <p>ユーザーネーム：<%= @book.user.name %></p>
-  <p>投稿日時：<%= @book.created_at.strftime('%Y/%m/%d') %></p>
-  <% if @book.user == current_user %>
-    <%= link_to "削除", book_path(@book), method: :delete %>
-  <% end %>
-</div>

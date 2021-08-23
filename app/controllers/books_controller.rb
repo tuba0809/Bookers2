@@ -1,4 +1,7 @@
 class BooksController < ApplicationController
+  
+  before_action :baria_user, only: [:edit, :destroy, :update]
+  
   def new
     @book = Book.new
   end
@@ -10,7 +13,8 @@ class BooksController < ApplicationController
       flash[:notice] = "Book was successfully created."
       redirect_to book_path(@book.id)
     else
-    render :new
+    @books = Book.all
+    render :index
     end
   end
 
@@ -20,7 +24,8 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.find(params[:id])
-    @user = @book.user
+    @users = @book.user
+    @books = Book.new
   end
 
   def edit
@@ -37,16 +42,19 @@ class BooksController < ApplicationController
   end
 
   def destroy
-    def destroy
     @book = Book.find(params[:id])
     @book.destroy
     redirect_to books_path
-    end
   end
 
    private
 
   def book_params
-    params.require(:book).permit(:shop_name, :image, :caption, :user_id)
+    params.require(:book).permit(:title, :body, :user_id)
   end
+  def baria_user
+    unless Book.find(params[:id]).user.id.to_i == current_user.id
+        redirect_to book_path(current_user)
+    end
+ end
 end
