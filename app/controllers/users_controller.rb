@@ -4,8 +4,9 @@ before_action :baria_user, only:[:edit, :update]
 
   def show
      @user = User.find(params[:id])
-     @books = Book.all
      @book = Book.new
+     #@books = Book.where(user_id: @user).includes(:user).order("created_at DESC")
+     @books = @user.books
   end
 
   def edit
@@ -14,6 +15,7 @@ before_action :baria_user, only:[:edit, :update]
 
   def index
     @user = User.all
+    @book = Book.new
   end
 
   def update

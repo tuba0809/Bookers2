@@ -1,7 +1,7 @@
 class BooksController < ApplicationController
-  
+
   before_action :baria_user, only: [:edit, :destroy, :update]
-  
+
   def new
     @book = Book.new
   end
@@ -20,6 +20,7 @@ class BooksController < ApplicationController
 
   def index
     @books = Book.all
+    @book = Book.new
   end
 
   def show
@@ -54,7 +55,7 @@ class BooksController < ApplicationController
   end
   def baria_user
     unless Book.find(params[:id]).user.id.to_i == current_user.id
-        redirect_to book_path(current_user)
+        redirect_to books_path
     end
  end
 end
